@@ -343,25 +343,114 @@ cd C:\shadowsocks\
 
 ## 技术原理
 
-```
-┌─────────────────────────────────────────────────┐
-│                   Windows 系统                     │
-│                                                   │
-│  应用 (浏览器/命令行/...)                          │
-│       │                                           │
-│       ▼ 系统路由表指向 TUN 设备                    │
-│  ┌───────────┐                                    │
-│  │ TUN 虚拟   │  ← sslocal 从这里读取 IP 包        │
-│  │ 网卡       │  → sslocal 将代理响应写回这里      │
-│  └─────┬─────┘                                    │
-│        │                                          │
-│  ┌─────▼─────┐                                    │
-│  │  sslocal   │  shadowsocks 协议加密              │
-│  │  (TUN)     │─────────────────────►              │
-│  └───────────┘  物理网卡 → 远端 ssserver          │
-│                                                   │
-└─────────────────────────────────────────────────┘
-```
+<svg width="720" height="480" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#388e3c"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e65100"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c62828"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6a1b9a"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="720" height="480" fill="#fafafa" rx="10"/>
+
+  <!-- Title -->
+  <text x="360" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">sslocal TUN 模式流量路径</text>
+
+  <!-- Windows system boundary -->
+  <rect x="20" y="50" width="460" height="380" fill="#e3f2fd" stroke="#90caf9" stroke-width="2" rx="8" stroke-dasharray="6,3"/>
+  <text x="250" y="72" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565c0">Windows 系统</text>
+
+  <!-- App -->
+  <rect x="60" y="100" width="160" height="60" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2" rx="6" filter="url(#shadow)"/>
+  <text x="140" y="125" text-anchor="middle" font-size="13" font-weight="bold" fill="#0277bd">应用</text>
+  <text x="140" y="145" text-anchor="middle" font-size="11" fill="#0277bd">(浏览器 / 命令行 / ...)</text>
+
+  <!-- Route table -->
+  <rect x="60" y="200" width="160" height="60" fill="#f3e5f5" stroke="#ce93d8" stroke-width="2" rx="6" filter="url(#shadow)"/>
+  <text x="140" y="225" text-anchor="middle" font-size="13" font-weight="bold" fill="#6a1b9a">系统路由表</text>
+  <text x="140" y="245" text-anchor="middle" font-size="11" fill="#6a1b9a">指向 TUN 设备</text>
+
+  <!-- TUN device -->
+  <rect x="60" y="300" width="160" height="60" fill="#fff3e0" stroke="#ffb74d" stroke-width="2" rx="6" filter="url(#shadow)"/>
+  <text x="140" y="325" text-anchor="middle" font-size="13" font-weight="bold" fill="#e65100">TUN 虚拟网卡</text>
+  <text x="140" y="345" text-anchor="middle" font-size="11" fill="#e65100">← 读取 IP 包 / 写回响应 →</text>
+
+  <!-- sslocal -->
+  <rect x="300" y="200" width="160" height="60" fill="#e8f5e9" stroke="#81c784" stroke-width="2" rx="6" filter="url(#shadow)"/>
+  <text x="380" y="225" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e7d32">sslocal (TUN)</text>
+  <text x="380" y="245" text-anchor="middle" font-size="11" fill="#2e7d32">解析 TCP/UDP · Shadowsocks 加密</text>
+
+  <!-- Physical NIC -->
+  <rect x="300" y="300" width="160" height="60" fill="#fce4ec" stroke="#e57373" stroke-width="2" rx="6" filter="url(#shadow)"/>
+  <text x="380" y="325" text-anchor="middle" font-size="13" font-weight="bold" fill="#c62828">物理网卡</text>
+  <text x="380" y="345" text-anchor="middle" font-size="11" fill="#c62828">出站流量出口</text>
+
+  <!-- Remote server -->
+  <rect x="530" y="200" width="160" height="60" fill="#fce4ec" stroke="#ef5350" stroke-width="2" rx="6" filter="url(#shadow)"/>
+  <text x="610" y="225" text-anchor="middle" font-size="13" font-weight="bold" fill="#b71c1c">远端 ssserver</text>
+  <text x="610" y="245" text-anchor="middle" font-size="11" fill="#b71c1c">解密 → 访问目标</text>
+
+  <!-- Arrows -->
+  <!-- App -> Route -->
+  <line x1="140" y1="160" x2="140" y2="195" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="155" y="182" font-size="10" fill="#1976d2">流量</text>
+
+  <!-- Route -> TUN -->
+  <line x1="140" y1="260" x2="140" y2="295" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="155" y="282" font-size="10" fill="#1976d2">默认路由</text>
+
+  <!-- TUN -> sslocal -->
+  <line x1="220" y1="320" x2="295" y2="240" stroke="#e65100" stroke-width="2" marker-end="url(#arrowOrange)"/>
+  <text x="235" y="275" font-size="10" fill="#e65100">原始 IP 包</text>
+
+  <!-- sslocal -> Physical NIC -->
+  <line x1="380" y1="260" x2="380" y2="295" stroke="#388e3c" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="395" y="282" font-size="10" fill="#388e3c">加密流量</text>
+
+  <!-- Physical NIC -> Remote -->
+  <line x1="460" y1="320" x2="525" y2="240" stroke="#c62828" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <text x="475" y="275" font-size="10" fill="#c62828">Internet</text>
+
+  <!-- Remote -> Physical NIC (response) -->
+  <line x1="610" y1="260" x2="610" y2="340" stroke="#6a1b9a" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <line x1="610" y1="340" x2="460" y2="340" stroke="#6a1b9a" stroke-width="2"/>
+  <line x1="460" y1="340" x2="460" y2="325" stroke="#6a1b9a" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="535" y="335" font-size="10" fill="#6a1b9a">响应</text>
+
+  <!-- sslocal -> TUN (response) -->
+  <line x1="300" y1="230" x2="225" y2="310" stroke="#6a1b9a" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="240" y="265" font-size="10" fill="#6a1b9a">响应 IP 包</text>
+
+  <!-- TUN -> App (response) - route along bottom and left edges, outside all boxes -->
+  <line x1="140" y1="360" x2="140" y2="390" stroke="#6a1b9a" stroke-width="2"/>
+  <line x1="140" y1="390" x2="30" y2="390" stroke="#6a1b9a" stroke-width="2"/>
+  <line x1="30" y1="390" x2="30" y2="90" stroke="#6a1b9a" stroke-width="2"/>
+  <line x1="30" y1="90" x2="140" y2="90" stroke="#6a1b9a" stroke-width="2"/>
+  <line x1="140" y1="90" x2="140" y2="100" stroke="#6a1b9a" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="85" y="395" font-size="10" fill="#6a1b9a">响应</text>
+
+  <!-- Legend -->
+  <rect x="20" y="440" width="680" height="30" fill="none"/>
+  <line x1="30" y1="455" x2="60" y2="455" stroke="#1976d2" stroke-width="2"/>
+  <text x="65" y="459" font-size="10" fill="#555">请求路径</text>
+  <line x1="160" y1="455" x2="190" y2="455" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="195" y="459" font-size="10" fill="#555">响应路径</text>
+</svg>
 
 - sslocal 创建 TUN 虚拟网卡，分配 IP 地址（如 `10.255.0.1/24`）
 - 系统路由表将默认流量指向 TUN 网卡
