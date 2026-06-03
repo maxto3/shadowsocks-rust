@@ -1527,9 +1527,9 @@ dependencies = [
 
 [[package]]
 name = "hyper"
-version = "1.10.0"
+version = "1.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb92f162bf56536459fc83c79b974bb12837acfed43d6bc370a7916d0ae15ecc"
+checksum = "55281c53a1894c864990125767da440a4e630446785086f52523b20033b74498"
 dependencies = [
  "atomic-waker",
  "bytes",
@@ -2103,9 +2103,9 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.30"
+version = "0.4.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "616ec5685824bcc94416c6d4a7a446eea774a31efd7062c8480ba6fd06d7a6e5"
+checksum = "113b30b4cd05f7c06868fdb2854f66a7b9fece9a48425351cd532e810d74024f"
 dependencies = [
  "serde_core",
 ]
@@ -2914,9 +2914,9 @@ dependencies = [
 
 [[package]]
 name = "rpassword"
-version = "7.5.3"
+version = "7.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "835a57a69104632d64deb0df2e09a69945cd7a6eab4070fc9b1d7e50cf6c3edc"
+checksum = "2da316a15f47e3d053de9cb2c439650bd8fa4aaeb9365f2e5f27f492ff73c196"
 dependencies = [
  "libc",
  "rtoolbox",
@@ -2998,9 +2998,9 @@ dependencies = [
 
 [[package]]
 name = "rustls-native-certs"
-version = "0.8.3"
+version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "612460d5f7bea540c490b2b6395d8e34a953e52b491accd6c86c8164c5932a63"
+checksum = "dab5152771c58876a2146916e53e35057e1a4dfa2b9df0f0305b07f611fdea4d"
 dependencies = [
  "openssl-probe 0.2.0",
  "rustls-pki-types",
