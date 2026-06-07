@@ -18,18 +18,18 @@ passthrough = ["RUSTFLAGS"]
 # https://github.com/rust-lang/compiler-team/issues/648
 # FIXME: build-std with sequence is supported only on git
 [target.mips-unknown-linux-gnu]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mips-unknown-linux-musl]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mips64-unknown-linux-gnuabi64]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mips64-unknown-linux-muslabi64]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mips64el-unknown-linux-gnuabi64]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mips64el-unknown-linux-muslabi64]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mipsel-unknown-linux-gnu]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
 [target.mipsel-unknown-linux-musl]
-build-std = ["std", "panic_abort", "proc_macro"]
+build-std = true
